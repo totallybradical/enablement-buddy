@@ -56,11 +56,11 @@ def report_enablements(incoming_msg):
     conn = sqlite3.connect('/home/toobradsosad/enablement-buddy/enablements.db')
     df = pd.read_sql_query("SELECT recipients, info, enablementDate FROM enablements WHERE user='" + incoming_msg.personId + "';", conn)
     # export_excel = df.to_excel (r'C:\Users\Ron\Desktop\export_dataframe.xlsx', index = None, header=True) #Don't forget to add '.xlsx' at the end of the path
-    # export_csv = df.to_csv ('/home/toobradsosad/enablement-buddy/exports/temp.csv', index = None, header=True) #Don't forget to add '.csv' at the end of the path
+    export_csv = df.to_csv ('/home/toobradsosad/enablement-buddy/exports/temp.csv', index = None, header=True) #Don't forget to add '.csv' at the end of the path
     num_enablements = df.shape[0]
     response = Response()
     response.markdown = "You've logged **" + str(num_enablements) + "** enablements! Here's a report for your records."
-    # response.files = "/home/toobradsosad/enablement-buddy/exports/temp.csv"
+    response.files = "/home/toobradsosad/enablement-buddy/exports/temp.csv"
     return response
 
 

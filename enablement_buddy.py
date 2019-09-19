@@ -85,8 +85,9 @@ bot = TeamsBot(
 bot.set_greeting(greeting)
 
 # Add commands to the bot.
-bot.add_command("/add", "Add a new enablement", add_enablement)
-bot.add_command("/report", "Get a report of your enablements", report_enablements)
+bot.add_command("/add", "Add a new enablement (/add <description> OR /add <# recipients> <description>)", add_enablement)
+bot.add_command("/report", "Get a report of your enablements to-date.", report_enablements)
+bot.remove_command("/echo")
 
 
 if __name__ == "__main__":

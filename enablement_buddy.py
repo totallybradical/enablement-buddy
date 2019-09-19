@@ -11,7 +11,7 @@ def greeting(incoming_msg):
 
     # Create a Response object and craft a reply in Markdown.
     response = Response()
-    response.markdown = "Hello {}, I'm Enablement Buddy!".format(sender.firstName)
+    response.markdown = "Hello {}, I'm Enablement Buddy! ".format(sender.firstName)
     response.markdown += "See what I can do by asking for **/help**."
     return response
 
@@ -31,7 +31,7 @@ def add_enablement(incoming_msg):
     if not desc:
         return "Invalid entry - did you include a description?"
 
-    conn = sqlite3.connect('enablements.db')
+    conn = sqlite3.connect('/home/toobradsosad/enablements.db')
     c = conn.cursor()
 
     # enablements(id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT NOT NULL, recipients INTEGER DEFAULT(1), info TEXT, enablementDate DATETIME DEFAULT(getdate()));

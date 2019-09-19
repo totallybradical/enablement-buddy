@@ -18,11 +18,6 @@ teams_token = os.getenv("TEAMS_BOT_TOKEN")
 bot_url = os.getenv("TEAMS_BOT_URL")
 bot_app_name = os.getenv("TEAMS_BOT_APP_NAME")
 
-print(bot_email)
-print(teams_token)
-print(bot_url)
-print(bot_app_name)
-
 # Create a Bot Object
 bot = TeamsBot(
     bot_app_name,

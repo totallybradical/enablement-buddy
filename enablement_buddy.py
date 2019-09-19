@@ -31,7 +31,7 @@ def add_enablement(incoming_msg):
     if not desc:
         return "Invalid entry - did you include a description?"
 
-    conn = sqlite3.connect('/home/toobradsosad/enablements.db')
+    conn = sqlite3.connect('/home/toobradsosad/enablement-buddy/enablements.db')
     c = conn.cursor()
 
     # enablements(id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT NOT NULL, recipients INTEGER DEFAULT(1), info TEXT, enablementDate DATETIME DEFAULT(getdate()));

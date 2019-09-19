@@ -59,7 +59,7 @@ def report_enablements(incoming_msg):
     # export_csv = df.to_csv ('/home/toobradsosad/enablement-buddy/exports/temp.csv', index = None, header=True) #Don't forget to add '.csv' at the end of the path
     num_enablements = df.shape[0]
     response = Response()
-    response.markdown = "You've logged **" + num_enablements + "** enablements! Here's a report for your records."
+    response.markdown = "You've logged **" + str(num_enablements) + "** enablements! Here's a report for your records."
     # response.files = "/home/toobradsosad/enablement-buddy/exports/temp.csv"
     return response
 

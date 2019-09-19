@@ -62,7 +62,10 @@ bot = TeamsBot(
     debug=True,
 )
 
-# Add new commands to the box.
+# Set the bot greeting.
+bot.set_greeting(greeting)
+
+# Add commands to the bot.
 bot.add_command("/add", "Add a new enablement", add_enablement)
 
 

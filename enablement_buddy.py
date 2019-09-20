@@ -70,7 +70,7 @@ teams_token = os.getenv("TEAMS_BOT_TOKEN")
 bot_url = os.getenv("TEAMS_BOT_URL")
 bot_app_name = os.getenv("TEAMS_BOT_APP_NAME")
 
-add_pattern = r"\/add (\d*)( *)(.+)"
+add_pattern = r".*\/add (\d*)( *)(.+)"
 
 # Create a Bot Object
 bot = TeamsBot(

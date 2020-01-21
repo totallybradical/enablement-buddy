@@ -2,3 +2,6 @@
 .vscode/
 venv
 venv/
+.env
+*.db
+*.db.bak

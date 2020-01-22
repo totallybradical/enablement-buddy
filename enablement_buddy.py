@@ -112,6 +112,7 @@ def show_card(incoming_msg):
                                 },
                                 {
                                     "type": "Input.Date",
+                                    "placeholder": "mm/dd/yyyy",
                                     "id": "date"
                                 },
                                 {

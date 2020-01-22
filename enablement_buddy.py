@@ -1,4 +1,5 @@
 from datetime import datetime
+from datetime import date
 import json
 import os
 from webexteamsbot import TeamsBot
@@ -58,6 +59,8 @@ def add_enablement(incoming_msg):
 # put it inside of the "content" below, otherwise Webex won't understand
 # what you send it.
 def show_card(incoming_msg):
+    today = date.today()
+    print(today)
     attachment = '''
     {
         "contentType": "application/vnd.microsoft.card.adaptive",
@@ -112,7 +115,6 @@ def show_card(incoming_msg):
                                 },
                                 {
                                     "type": "Input.Date",
-                                    "placeholder": "mm/dd/yyyy",
                                     "id": "date"
                                 },
                                 {
@@ -159,19 +161,20 @@ def handle_cards(api, incoming_msg):
     m = get_attachment_actions(incoming_msg["data"]["id"])
     activity_type = m["inputs"]["activity_type"]
     description = m["inputs"]["description"]
-    date = m["inputs"]["description"]
+    date = m["inputs"]["date"]
+    print(date)
     date_object = datetime.strptime(date, '%m/%d/%Y')
+    return date
+    # conn = sqlite3.connect('/home/toobradsosad/enablement-buddy/enablements.db')
+    # c = conn.cursor()
 
-    conn = sqlite3.connect('/home/toobradsosad/enablement-buddy/enablements.db')
-    c = conn.cursor()
-
-    # enablements(id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT NOT NULL, recipients INTEGER DEFAULT(1), info TEXT, enablementDate DATETIME DEFAULT(getdate()));
-    c.execute("INSERT INTO enablements (user, info, enablementDate) VALUES ('" + incoming_msg.personId + "', '" + description + "', '" + date_object + "');")
+    # # enablements(id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT NOT NULL, recipients INTEGER DEFAULT(1), info TEXT, enablementDate DATETIME DEFAULT(getdate()));
+    # c.execute("INSERT INTO enablements (user, info, enablementDate) VALUES ('" + incoming_msg.personId + "', '" + description + "', '" + date_object + "');")
     
-    conn.commit()
-    conn.close()
+    # conn.commit()
+    # conn.close()
 
-    return "Enablement added successfully!"
+    # return "Enablement added successfully!"
 
 
 # Temporary function to send a message with a card attachment (not yet

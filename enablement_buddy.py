@@ -146,7 +146,6 @@ def show_card(incoming_msg):
     c = create_message_with_attachment(incoming_msg.roomId,
                                        msgtxt=backupmessage,
                                        attachment=json.loads(attachment))
-    print(c)
     return ""
 
 
@@ -159,6 +158,7 @@ def handle_cards(api, incoming_msg):
     :return: A text or markdown based reply
     """
     m = get_attachment_actions(incoming_msg["data"]["id"])
+    print(m["inputs"])s
     activity_type = m["inputs"]["activity_type"]
     description = m["inputs"]["description"]
     date = m["inputs"]["date"]

@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 from webexteamsbot import TeamsBot
 from webexteamsbot.models import Response
@@ -15,6 +16,9 @@ def greeting(incoming_msg):
     response.markdown = "Hello {}, I'm Enablement Buddy! ".format(sender.firstName)
     response.markdown += "See what I can do by asking for **/help**."
     return response
+
+
+def store_in_db(activity_type, description, date):
 
 
 def add_enablement(incoming_msg):
@@ -45,6 +49,157 @@ def add_enablement(incoming_msg):
     conn.close()
 
     return "Enablement added successfully!"
+
+
+# This function generates a basic adaptive card and sends it to the user
+# You can use Microsofts Adaptive Card designer here:
+# https://adaptivecards.io/designer/. The formatting that Webex Teams
+# uses isn't the same, but this still helps with the overall layout
+# make sure to take the data that comes out of the MS card designer and
+# put it inside of the "content" below, otherwise Webex won't understand
+# what you send it.
+def show_card(incoming_msg):
+    attachment = '''
+    {
+        "contentType": "application/vnd.microsoft.card.adaptive",
+        "content": {
+            "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+            "type": "AdaptiveCard",
+            "version": "1.0",
+            "body": [
+                {
+                    "type": "ColumnSet",
+                    "columns": [
+                        {
+                            "type": "Column",
+                            "width": 2,
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "text": "Add an Activity",
+                                    "weight": "Bolder",
+                                    "size": "Medium"
+                                },
+                                {
+                                    "type": "TextBlock",
+                                    "text": "Log an activity that you've spent time on.",
+                                    "isSubtle": true,
+                                    "wrap": true
+                                },
+                                {
+                                    "type": "TextBlock",
+                                    "size": "Small",
+                                    "text": "Type"
+                                },
+                                {
+                                    "type": "Input.ChoiceSet",
+                                    "id": "activity_type",
+                                    "placeholder": "Choose an activity type...",
+                                    "choices": [
+                                        {
+                                            "title": "Enablement",
+                                            "value": "enablement"
+                                        },
+                                        {
+                                            "title": "Post-Sales",
+                                            "value": "post_sales"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TextBlock",
+                                    "size": "Small",
+                                    "text": "Date"
+                                },
+                                {
+                                    "type": "Input.Date",
+                                    "id": "date"
+                                },
+                                {
+                                    "type": "TextBlock",
+                                    "size": "Small",
+                                    "text": "Description"
+                                },
+                                {
+                                    "type": "Input.Text",
+                                    "id": "description",
+                                    "placeholder": "What did you do?"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "actions": [
+                {
+                    "type": "Action.Submit",
+                    "title": "Submit"
+                }
+            ]
+        }
+    }
+    '''
+    backupmessage = "This is an example using Adaptive Cards."
+
+    c = create_message_with_attachment(incoming_msg.roomId,
+                                       msgtxt=backupmessage,
+                                       attachment=json.loads(attachment))
+    print(c)
+    return ""
+
+
+# An example of how to process card actions
+def handle_cards(api, incoming_msg):
+    """
+    Sample function to handle card actions.
+    :param api: webexteamssdk object
+    :param incoming_msg: The incoming message object from Teams
+    :return: A text or markdown based reply
+    """
+    m = get_attachment_actions(incoming_msg["data"]["id"])
+    activity_type = m["inputs"]["activity_type"]
+    description = m["inputs"]["description"]
+    date = m["inputs"]["description"]
+    date_object = datetime.strptime(date, '%m/%d/%Y')
+
+    conn = sqlite3.connect('/home/toobradsosad/enablement-buddy/enablements.db')
+    c = conn.cursor()
+
+    # enablements(id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT NOT NULL, recipients INTEGER DEFAULT(1), info TEXT, enablementDate DATETIME DEFAULT(getdate()));
+    c.execute("INSERT INTO enablements (user, info, enablementDate) VALUES ('" + incoming_msg.personId + "', '" + description + "', '" + date_object + "');")
+    
+    conn.commit()
+    conn.close()
+
+    return "Enablement added successfully!"
+
+
+# Temporary function to send a message with a card attachment (not yet
+# supported by webexteamssdk, but there are open PRs to add this
+# functionality)
+def create_message_with_attachment(rid, msgtxt, attachment):
+    headers = {
+        'content-type': 'application/json; charset=utf-8',
+        'authorization': 'Bearer ' + teams_token
+    }
+
+    url = 'https://api.ciscospark.com/v1/messages'
+    data = {"roomId": rid, "attachments": [attachment], "markdown": msgtxt}
+    response = requests.post(url, json=data, headers=headers)
+    return response.json()
+
+
+# Temporary function to get card attachment actions (not yet supported
+# by webexteamssdk, but there are open PRs to add this functionality)
+def get_attachment_actions(attachmentid):
+    headers = {
+        'content-type': 'application/json; charset=utf-8',
+        'authorization': 'Bearer ' + teams_token
+    }
+
+    url = 'https://api.ciscospark.com/v1/attachment/actions/' + attachmentid
+    response = requests.get(url, headers=headers)
+    return response.json()
 
 
 def report_enablements(incoming_msg):
@@ -86,6 +241,7 @@ bot.set_greeting(greeting)
 
 # Add commands to the bot.
 bot.add_command("/add", "Add a new enablement (/add <description> OR /add <# recipients> <description>)", add_enablement)
+bot.add_command("/card", "New card version for adding!", show_card)
 bot.add_command("/report", "Get a report of your enablements to-date.", report_enablements)
 bot.remove_command("/echo")
 

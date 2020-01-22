@@ -1,4 +1,5 @@
 from datetime import datetime
+import json
 import os
 from webexteamsbot import TeamsBot
 from webexteamsbot.models import Response
@@ -16,7 +17,7 @@ def greeting(incoming_msg):
     response.markdown = "Hello {}, I'm Enablement Buddy! ".format(sender.firstName)
     response.markdown += "See what I can do by asking for **/help**."
     return response
-    
+
 
 def add_enablement(incoming_msg):
     """

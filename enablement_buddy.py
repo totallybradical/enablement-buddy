@@ -158,7 +158,7 @@ def handle_cards(api, incoming_msg):
     :return: A text or markdown based reply
     """
     m = get_attachment_actions(incoming_msg["data"]["id"])
-    print(m["inputs"])
+    print("handle_cards 1: " + m["inputs"])
     activity_type = m["inputs"]["activity_type"]
     description = m["inputs"]["description"]
     date = m["inputs"]["date"]

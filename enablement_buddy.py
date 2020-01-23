@@ -145,6 +145,11 @@ def show_card(incoming_msg):
                                 {
                                     "type": "TextBlock",
                                     "size": "Small",
+                                    "text": "Duration (hours)"
+                                },
+                                {
+                                    "type": "TextBlock",
+                                    "size": "Small",
                                     "text": "Description"
                                 },
                                 {

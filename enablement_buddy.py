@@ -149,7 +149,6 @@ def show_card(incoming_msg):
                                 },
                                 {
                                     "type": "Input.Number",
-                                    "placeholder": "Placeholder text",
                                     "value": "0.5",
                                     "id": "duration"
                                 },

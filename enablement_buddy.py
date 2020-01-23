@@ -124,7 +124,7 @@ def show_card(incoming_msg):
                                     "choices": [
                                         {
                                             "title": "Enablement",
-                                            "value": "enablements"
+                                            "value": "enablement"
                                         },
                                         {
                                             "title": "Post-Sales",
@@ -192,8 +192,11 @@ def handle_cards(api, incoming_msg):
     c = conn.cursor()
 
     # enablements(id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT NOT NULL, recipients INTEGER DEFAULT(1), info TEXT, enablementDate DATETIME DEFAULT(getdate()));
-    c.execute("INSERT INTO " + activity_type + " (user, info, enablementDate) VALUES ('" + incoming_msg["actorId"] + "', '" + description + "', '" + date_str + "');")
-    
+    if activity_type == "enablement":
+        c.execute("INSERT INTO " + activity_type + " (user, info, enablementDate) VALUES ('" + incoming_msg["actorId"] + "', '" + description + "', '" + date_str + "');")
+    elif activity_type == "postsales":
+        c.execute("INSERT INTO " + activity_type + " (user, info, postsalesDate) VALUES ('" + incoming_msg["actorId"] + "', '" + description + "', '" + date_str + "');")
+
     conn.commit()
     conn.close()
 

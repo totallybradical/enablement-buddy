@@ -80,8 +80,8 @@ def add_enablement(incoming_msg):
 # put it inside of the "content" below, otherwise Webex won't understand
 # what you send it.
 def show_card(incoming_msg):
-    today = date.today()
-    print(today)
+    # today = date.today()
+    # print(today)
     attachment = '''
     {
         "contentType": "application/vnd.microsoft.card.adaptive",
@@ -178,15 +178,15 @@ def handle_cards(api, incoming_msg):
     :param incoming_msg: The incoming message object from Teams
     :return: A text or markdown based reply
     """
-    print("I AM SO GLAD YOU MADE IT")
     m = get_attachment_actions(incoming_msg["data"]["id"])
-    return "card action was - {}".format(m["inputs"])
-    # activity_type = m["inputs"]["activity_type"]
-    # description = m["inputs"]["description"]
-    # date = m["inputs"]["date"]
-    # print(date)
-    # date_object = datetime.strptime(date, '%m/%d/%Y')
-    # return date
+    activity_type = m["inputs"]["activity_type"]
+    print(activity_type)
+    description = m["inputs"]["description"]
+    print(description)
+    date = m["inputs"]["date"]
+    print(date)
+    date_object = datetime.strptime(date, '%m/%d/%Y')
+    return date
     # conn = sqlite3.connect('/home/toobradsosad/enablement-buddy/enablements.db')
     # c = conn.cursor()
 
@@ -248,6 +248,7 @@ def report_enablements(incoming_msg):
 bot.set_greeting(greeting)
 
 # Add commands to the bot.
+bot.add_command('attachmentActions', '*', handle_cards)
 bot.add_command("/add", "Add a new enablement (/add <description> OR /add <# recipients> <description>)", add_enablement)
 bot.add_command("/card", "New card version for adding!", show_card)
 bot.add_command("/report", "Get a report of your enablements to-date.", report_enablements)

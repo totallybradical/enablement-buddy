@@ -148,7 +148,7 @@ def show_card(incoming_msg):
                                     "text": "Duration (hours)"
                                 },
                                 {
-                                    "type": "Input.Number",
+                                    "type": "Input.Text",
                                     "value": "0.5",
                                     "id": "duration"
                                 },

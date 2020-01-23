@@ -205,7 +205,7 @@ def handle_cards(api, incoming_msg):
 
     # enablements(id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT NOT NULL, recipients INTEGER DEFAULT(1), info TEXT, enablementDate DATETIME DEFAULT(getdate()));
     c.execute("INSERT INTO tracking (user, description, duration, activityDate) VALUES ('" + incoming_msg["actorId"] + "', '" + description + "', '" + duration + "', '" + date_str + "');")
-    
+
     conn.commit()
     conn.close()
 
@@ -240,20 +240,20 @@ def get_attachment_actions(attachmentid):
     return response.json()
 
 
-def report_enablements(incoming_msg):
+def generate_report(incoming_msg):
     """
     Sample function to do some action.
     :param incoming_msg: The incoming message object from Teams
     :return: A text or markdown based reply
     """
-    conn = sqlite3.connect('/home/toobradsosad/enablement-buddy/enablements.db')
-    df = pd.read_sql_query("SELECT recipients, info, enablementDate FROM enablements WHERE user='" + incoming_msg.personId + "';", conn)
-    export_excel = df.to_excel ('/home/toobradsosad/enablement-buddy/exports/enablements.xlsx', index = None, header=True) #Don't forget to add '.xlsx' at the end of the path
+    conn = sqlite3.connect('/home/toobradsosad/enablement-buddy/tracking.db')
+    df = pd.read_sql_query("SELECT description, activityDate FROM tracking WHERE user='" + incoming_msg.personId + "';", conn)
+    export_excel = df.to_excel ('/home/toobradsosad/enablement-buddy/exports/activities.xlsx', index = None, header=True) #Don't forget to add '.xlsx' at the end of the path
     # export_csv = df.to_csv('/home/toobradsosad/enablement-buddy/exports/temp.csv', index = None, header=True) #Don't forget to add '.csv' at the end of the path
     num_enablements = df.shape[0]
     response = Response()
-    response.markdown = "You've logged **" + str(num_enablements) + "** enablements! Here's a report for your records."
-    response.files = "/home/toobradsosad/enablement-buddy/exports/enablements.xlsx"
+    response.markdown = "You've logged **" + str(num_enablements) + "** activities! Here's a report for your records."
+    response.files = "/home/toobradsosad/enablement-buddy/exports/activities.xlsx"
     return response
 
 
@@ -263,8 +263,8 @@ bot.set_greeting(greeting)
 # Add commands to the bot.
 bot.add_command('attachmentActions', '*', handle_cards)
 bot.add_command("/add", "Add a new enablement (/add <description> OR /add <# recipients> <description>)", add_enablement)
-bot.add_command("/card", "New card version for adding!", show_card)
-bot.add_command("/report", "Get a report of your enablements to-date.", report_enablements)
+bot.add_command("/card", "Log an activity using a card!", show_card)
+bot.add_command("/report", "Get a report of your activities to-date.", generate_report)
 bot.remove_command("/echo")
 
 if __name__ == "__main__":

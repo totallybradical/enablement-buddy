@@ -139,7 +139,7 @@ def show_card(incoming_msg):
                                 },
                                 {
                                     "type": "Input.Date",
-                                    "placeholder": "''' + today_str + '''",
+                                    "value": "''' + today_str + '''",
                                     "id": "date"
                                 },
                                 {

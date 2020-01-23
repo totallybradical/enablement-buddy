@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 from datetime import datetime
 from datetime import date
 import json
@@ -9,6 +10,8 @@ import re
 import requests
 import sqlite3
 
+
+load_dotenv()
 
 # Retrieve required details from environment variables
 bot_email = os.getenv("TEAMS_BOT_EMAIL")
@@ -80,8 +83,8 @@ def add_enablement(incoming_msg):
 # put it inside of the "content" below, otherwise Webex won't understand
 # what you send it.
 def show_card(incoming_msg):
-    # today = date.today()
-    # print(today)
+    today = date.today()
+    today_str = today.strftime('%m/%d/%Y')
     attachment = '''
     {
         "contentType": "application/vnd.microsoft.card.adaptive",
@@ -136,6 +139,7 @@ def show_card(incoming_msg):
                                 },
                                 {
                                     "type": "Input.Date",
+                                    "placeholder": "''' + today_str + '''",
                                     "id": "date"
                                 },
                                 {

@@ -236,7 +236,8 @@ bot = TeamsBot(
     teams_bot_token=teams_token,
     teams_bot_url=bot_url,
     teams_bot_email=bot_email,
-    debug=True,
+    webhook_resource_event=[{"resource": "messages", "event": "created"},
+                            {"resource": "attachmentActions", "event": "created"}]
 )
 
 # Set the bot greeting.

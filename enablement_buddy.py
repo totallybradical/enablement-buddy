@@ -187,11 +187,12 @@ def handle_cards(api, incoming_msg):
     description = m["inputs"]["description"]
     date = m["inputs"]["date"]
     date_object = datetime.strptime(date, '%m/%d/%Y')
+    date_str = date_object.strftime('%Y-%m-%d')
     conn = sqlite3.connect('/home/toobradsosad/enablement-buddy/enablements.db')
     c = conn.cursor()
 
     # enablements(id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT NOT NULL, recipients INTEGER DEFAULT(1), info TEXT, enablementDate DATETIME DEFAULT(getdate()));
-    c.execute("INSERT INTO enablements (user, info, enablementDate) VALUES ('" + incoming_msg["actorId"] + "', '" + description + "', '" + date + "');")
+    c.execute("INSERT INTO enablements (user, info, enablementDate) VALUES ('" + incoming_msg["actorId"] + "', '" + description + "', '" + date_str + "');")
     
     conn.commit()
     conn.close()

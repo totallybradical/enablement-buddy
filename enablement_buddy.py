@@ -28,16 +28,9 @@ bot = TeamsBot(
                             {"resource": "attachmentActions", "event": "created"}]
 )
 
-# Set the bot greeting.
-bot.set_greeting(greeting)
 
-# Add commands to the bot.
-bot.add_command("/add", "Add a new enablement (/add <description> OR /add <# recipients> <description>)", add_enablement)
-bot.add_command("/card", "New card version for adding!", show_card)
-bot.add_command("/report", "Get a report of your enablements to-date.", report_enablements)
-bot.remove_command("/echo")
-
-
+# Create a custom bot greeting function returned when no command is given.
+# The default behavior of the bot is to return the '/help' command response
 def greeting(incoming_msg):
     # Lookup details about sender
     sender = bot.teams.people.get(incoming_msg.personId)
@@ -249,6 +242,15 @@ def report_enablements(incoming_msg):
     response.files = "/home/toobradsosad/enablement-buddy/exports/enablements.xlsx"
     return response
 
+
+# Set the bot greeting.
+bot.set_greeting(greeting)
+
+# Add commands to the bot.
+bot.add_command("/add", "Add a new enablement (/add <description> OR /add <# recipients> <description>)", add_enablement)
+bot.add_command("/card", "New card version for adding!", show_card)
+bot.add_command("/report", "Get a report of your enablements to-date.", report_enablements)
+bot.remove_command("/echo")
 
 if __name__ == "__main__":
     # Run Bot

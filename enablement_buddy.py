@@ -178,6 +178,7 @@ def handle_cards(api, incoming_msg):
     :param incoming_msg: The incoming message object from Teams
     :return: A text or markdown based reply
     """
+    print("I AM SO GLAD YOU MADE IT")
     m = get_attachment_actions(incoming_msg["data"]["id"])
     return "card action was - {}".format(m["inputs"])
     # activity_type = m["inputs"]["activity_type"]

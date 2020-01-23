@@ -193,7 +193,7 @@ def handle_cards(api, incoming_msg):
     print(incoming_msg)
 
     # enablements(id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT NOT NULL, recipients INTEGER DEFAULT(1), info TEXT, enablementDate DATETIME DEFAULT(getdate()));
-    c.execute("INSERT INTO enablements (user, info, enablementDate) VALUES ('" + incoming_msg.actorId + "', '" + description + "', '" + date_object + "');")
+    c.execute("INSERT INTO enablements (user, info, enablementDate) VALUES ('" + incoming_msg["actorId"] + "', '" + description + "', '" + date_object + "');")
     
     conn.commit()
     conn.close()

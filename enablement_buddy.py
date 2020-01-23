@@ -10,6 +10,34 @@ import requests
 import sqlite3
 
 
+# Retrieve required details from environment variables
+bot_email = os.getenv("TEAMS_BOT_EMAIL")
+teams_token = os.getenv("TEAMS_BOT_TOKEN")
+bot_url = os.getenv("TEAMS_BOT_URL")
+bot_app_name = os.getenv("TEAMS_BOT_APP_NAME")
+
+add_pattern = r".*\/add (\d*)( *)(.+)"
+
+# Create a Bot Object
+bot = TeamsBot(
+    bot_app_name,
+    teams_bot_token=teams_token,
+    teams_bot_url=bot_url,
+    teams_bot_email=bot_email,
+    webhook_resource_event=[{"resource": "messages", "event": "created"},
+                            {"resource": "attachmentActions", "event": "created"}]
+)
+
+# Set the bot greeting.
+bot.set_greeting(greeting)
+
+# Add commands to the bot.
+bot.add_command("/add", "Add a new enablement (/add <description> OR /add <# recipients> <description>)", add_enablement)
+bot.add_command("/card", "New card version for adding!", show_card)
+bot.add_command("/report", "Get a report of your enablements to-date.", report_enablements)
+bot.remove_command("/echo")
+
+
 def greeting(incoming_msg):
     # Lookup details about sender
     sender = bot.teams.people.get(incoming_msg.personId)
@@ -158,13 +186,13 @@ def handle_cards(api, incoming_msg):
     :return: A text or markdown based reply
     """
     m = get_attachment_actions(incoming_msg["data"]["id"])
-    print("handle_cards 1: " + m["inputs"])
-    activity_type = m["inputs"]["activity_type"]
-    description = m["inputs"]["description"]
-    date = m["inputs"]["date"]
-    print(date)
-    date_object = datetime.strptime(date, '%m/%d/%Y')
-    return date
+    return "card action was - {}".format(m["inputs"])
+    # activity_type = m["inputs"]["activity_type"]
+    # description = m["inputs"]["description"]
+    # date = m["inputs"]["date"]
+    # print(date)
+    # date_object = datetime.strptime(date, '%m/%d/%Y')
+    # return date
     # conn = sqlite3.connect('/home/toobradsosad/enablement-buddy/enablements.db')
     # c = conn.cursor()
 
@@ -220,34 +248,6 @@ def report_enablements(incoming_msg):
     response.markdown = "You've logged **" + str(num_enablements) + "** enablements! Here's a report for your records."
     response.files = "/home/toobradsosad/enablement-buddy/exports/enablements.xlsx"
     return response
-
-
-# Retrieve required details from environment variables
-bot_email = os.getenv("TEAMS_BOT_EMAIL")
-teams_token = os.getenv("TEAMS_BOT_TOKEN")
-bot_url = os.getenv("TEAMS_BOT_URL")
-bot_app_name = os.getenv("TEAMS_BOT_APP_NAME")
-
-add_pattern = r".*\/add (\d*)( *)(.+)"
-
-# Create a Bot Object
-bot = TeamsBot(
-    bot_app_name,
-    teams_bot_token=teams_token,
-    teams_bot_url=bot_url,
-    teams_bot_email=bot_email,
-    webhook_resource_event=[{"resource": "messages", "event": "created"},
-                            {"resource": "attachmentActions", "event": "created"}]
-)
-
-# Set the bot greeting.
-bot.set_greeting(greeting)
-
-# Add commands to the bot.
-bot.add_command("/add", "Add a new enablement (/add <description> OR /add <# recipients> <description>)", add_enablement)
-bot.add_command("/card", "New card version for adding!", show_card)
-bot.add_command("/report", "Get a report of your enablements to-date.", report_enablements)
-bot.remove_command("/echo")
 
 
 if __name__ == "__main__":

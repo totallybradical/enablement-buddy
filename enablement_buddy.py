@@ -145,6 +145,17 @@ def show_card(incoming_msg):
                                 {
                                     "type": "TextBlock",
                                     "size": "Small",
+                                    "text": "Duration (hours)"
+                                },
+                                {
+                                    "type": "Input.Number",
+                                    "placeholder": "Placeholder text",
+                                    "value": "0.5",
+                                    "id": "duration"
+                                },
+                                {
+                                    "type": "TextBlock",
+                                    "size": "Small",
                                     "text": "Description"
                                 },
                                 {
@@ -185,22 +196,20 @@ def handle_cards(api, incoming_msg):
     m = get_attachment_actions(incoming_msg["data"]["id"])
     activity_type = m["inputs"]["activity_type"]
     description = m["inputs"]["description"]
+    duration = m["inputs"]["duration"]
     date = m["inputs"]["date"]
     date_object = datetime.strptime(date, '%m/%d/%Y')
     date_str = date_object.strftime('%Y-%m-%d')
-    conn = sqlite3.connect('/home/toobradsosad/enablement-buddy/enablements.db')
+    conn = sqlite3.connect('/home/toobradsosad/enablement-buddy/tracking.db')
     c = conn.cursor()
 
     # enablements(id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT NOT NULL, recipients INTEGER DEFAULT(1), info TEXT, enablementDate DATETIME DEFAULT(getdate()));
-    if activity_type == "enablement":
-        c.execute("INSERT INTO " + activity_type + " (user, info, enablementDate) VALUES ('" + incoming_msg["actorId"] + "', '" + description + "', '" + date_str + "');")
-    elif activity_type == "postsales":
-        c.execute("INSERT INTO " + activity_type + " (user, info, postsalesDate) VALUES ('" + incoming_msg["actorId"] + "', '" + description + "', '" + date_str + "');")
-
+    c.execute("INSERT INTO tracking (user, description, duration, activityDate) VALUES ('" + incoming_msg["actorId"] + "', '" + description + "', '" + duration + "', '" + date_str + "');")
+    
     conn.commit()
     conn.close()
 
-    return "Enablement added successfully!"
+    return "Added successfully!"
 
 
 # Temporary function to send a message with a card attachment (not yet

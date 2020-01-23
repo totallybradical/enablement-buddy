@@ -187,7 +187,6 @@ def handle_cards(api, incoming_msg):
     description = m["inputs"]["description"]
     date = m["inputs"]["date"]
     date_object = datetime.strptime(date, '%m/%d/%Y')
-    return date
     conn = sqlite3.connect('/home/toobradsosad/enablement-buddy/enablements.db')
     c = conn.cursor()
 

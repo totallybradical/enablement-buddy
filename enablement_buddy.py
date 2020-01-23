@@ -203,7 +203,7 @@ def handle_cards(api, incoming_msg):
     c = conn.cursor()
 
     # enablements(id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT NOT NULL, recipients INTEGER DEFAULT(1), info TEXT, enablementDate DATETIME DEFAULT(getdate()));
-    c.execute("INSERT INTO tracking (user, description, duration, activityDate) VALUES ('" + incoming_msg["actorId"] + "', '" + description + "', '" + duration + "', '" + date_str + "');")
+    c.execute("INSERT INTO tracking (user, activityType, description, duration, activityDate) VALUES ('" + incoming_msg["actorId"] + "', '" + activity_type + "', '" + description + "', '" + duration + "', '" + date_str + "');")
 
     conn.commit()
     conn.close()
@@ -246,7 +246,7 @@ def generate_report(incoming_msg):
     :return: A text or markdown based reply
     """
     conn = sqlite3.connect('/home/toobradsosad/enablement-buddy/tracking.db')
-    df = pd.read_sql_query("SELECT description, activityDate FROM tracking WHERE user='" + incoming_msg.personId + "';", conn)
+    df = pd.read_sql_query("SELECT activityType, description, activityDate FROM tracking WHERE user='" + incoming_msg.personId + "';", conn)
     export_excel = df.to_excel ('/home/toobradsosad/enablement-buddy/exports/activities.xlsx', index = None, header=True) #Don't forget to add '.xlsx' at the end of the path
     # export_csv = df.to_csv('/home/toobradsosad/enablement-buddy/exports/temp.csv', index = None, header=True) #Don't forget to add '.csv' at the end of the path
     num_enablements = df.shape[0]

@@ -246,7 +246,7 @@ def generate_report(incoming_msg):
     :return: A text or markdown based reply
     """
     conn = sqlite3.connect('/home/toobradsosad/enablement-buddy/tracking.db')
-    df = pd.read_sql_query("SELECT activityType, description, activityDate FROM tracking WHERE user='" + incoming_msg.personId + "';", conn)
+    df = pd.read_sql_query("SELECT activityType, description, duration, activityDate FROM tracking WHERE user='" + incoming_msg.personId + "';", conn)
     export_excel = df.to_excel ('/home/toobradsosad/enablement-buddy/exports/activities.xlsx', index = None, header=True) #Don't forget to add '.xlsx' at the end of the path
     # export_csv = df.to_csv('/home/toobradsosad/enablement-buddy/exports/temp.csv', index = None, header=True) #Don't forget to add '.csv' at the end of the path
     num_enablements = df.shape[0]

@@ -201,7 +201,7 @@ def handle_cards(api, incoming_msg):
     c = conn.cursor()
 
     # enablements(id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT NOT NULL, recipients INTEGER DEFAULT(1), info TEXT, enablementDate DATETIME DEFAULT(getdate()));
-    c.execute("INSERT INTO tracking (user, activityType, description, duration, activityDate) VALUES ('" + incoming_msg["actorId"] + "', '" + activity_type + "', '" + description + "', '" + duration + "', '" + date_str + "');")
+    c.execute("INSERT INTO tracking (user, activityType, description, duration, activityDate) VALUES ('" + incoming_msg["actorId"] + "', '" + activity_type + "', '" + description + "', '" + duration + "', '" + date + "');")
 
     conn.commit()
     conn.close()

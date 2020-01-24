@@ -197,8 +197,6 @@ def handle_cards(api, incoming_msg):
     description = m["inputs"]["description"]
     duration = m["inputs"]["duration"]
     date = m["inputs"]["date"]
-    date_object = datetime.strptime(date, '%m/%d/%Y')
-    date_str = date_object.strftime('%Y-%m-%d')
     conn = sqlite3.connect('/home/toobradsosad/enablement-buddy/tracking.db')
     c = conn.cursor()
 
